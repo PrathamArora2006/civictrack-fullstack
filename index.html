@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CivicTrack - Report Civic Issues</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
+    <style>
+        .font-roboto-slab { font-family: 'Roboto Slab', serif; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+        .modal-bg { background-color: rgba(0,0,0,0.5); }
+    </style>
+</head>
+<body class="bg-[#F1F8E8]">
+
+    <div id="root">
+        <!-- =================================== HOME PAGE =================================== -->
+        <div id="home-page" class="flex flex-col min-h-screen">
+            <header class="bg-[#D8EFD3] shadow-md"><h1 class="font-roboto-slab text-4xl text-center text-black py-4">CivicTrack</h1></header>
+            <main class="flex-grow w-full bg-[#F1F8E8] flex flex-col justify-center items-center p-8 space-y-6">
+                <button id="file-complaint-btn" class="w-full max-w-sm bg-[#55AD9B] text-white font-bold py-4 px-6 rounded-xl shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out text-lg">File A Complaint</button>
+                <button id="see-complaints-btn" class="w-full max-w-sm bg-[#95D2B3] text-white font-bold py-4 px-6 rounded-xl shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out text-lg">See Complaints</button>
+            </main>
+            <footer class="w-full bg-white/70 backdrop-blur-sm p-4 shadow-[0_-2px_5px_-1px_rgba(0,0,0,0.1)]"><div class="flex justify-around items-center"><a href="#" class="footer-link text-gray-700 hover:text-[#55AD9B]" data-message="Developed for SIH">About Us</a><a href="#" class="footer-link text-gray-700 hover:text-[#55AD9B]" data-message="Prototype, not for commercial use">Terms & Conditions</a><a href="#" class="footer-link text-gray-700 hover:text-[#55AD9B]" data-message="Help Line 📞: +91 18008904115">Help Line</a></div></footer>
+        </div>
+
+        <!-- =================================== AUTHENTICATION PAGE =================================== -->
+        <div id="auth-page" class="hidden flex-col min-h-screen bg-[#F1F8E8]">
+            <header class="bg-[#D8EFD3] shadow-md py-3 flex items-center px-4"><button class="back-btn p-2" data-target="home-page"><svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg></button><h2 class="font-roboto-slab text-2xl text-center text-black flex-grow">Verification</h2><div class="w-10"></div></header>
+            <main class="flex-grow flex flex-col justify-center items-center p-6"><div class="w-full max-w-sm space-y-4"><p class="text-center text-sm text-gray-600">Enter your details to proceed. We'll simulate OTP for this demo.</p><input id="auth-user-name" type="text" placeholder="Enter your full name" class="w-full p-3 rounded-lg border-2"><input id="auth-user-phone" type="tel" placeholder="Phone with country code (e.g., +91...)" class="w-full p-3 rounded-lg border-2"><button id="verify-demobtn" class="w-full bg-[#55AD9B] text-white py-3 rounded-xl shadow-lg">Verify & Proceed</button></div></main>
+        </div>
+
+        <!-- =================================== CATEGORY SELECTION PAGE =================================== -->
+        <div id="category-page" class="hidden flex-col min-h-screen bg-[#F1F8E8]">
+            <header class="bg-[#D8EFD3] shadow-md py-3 flex items-center px-4"><button class="back-btn p-2" data-target="auth-page"><svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg></button><h2 class="font-roboto-slab text-2xl text-center text-black flex-grow">Select Category</h2><div class="w-10"></div></header>
+            <main class="flex-grow flex flex-col justify-center items-center p-6"><div class="w-full max-w-sm space-y-4"><h3 class="font-semibold text-center text-gray-700">What is the nature of your complaint?</h3><select id="complaint-category" class="w-full p-3 rounded-lg border-2"><option value="">-- Select a Category --</option><optgroup label="Critical Issues"><option value="Garbage">Garbage</option><option value="Streetlights">Streetlights</option><option value="Public Toilet">Public Toilet</option><option value="Parks">Parks</option><option value="Sewage">Sewage</option><option value="Drainage">Drainage</option><option value="Pipeline leakage">Pipeline leakage</option></optgroup><optgroup label="Major Issues"><option value="Fire safety">Fire safety</option><option value="Damaged Traffic Signals">Damaged Traffic Signals</option><option value="Power cut">Power cut</option><option value="Potholes">Potholes</option><option value="Encroachment">Encroachment</option><option value="Damaged Footpath">Damaged Footpath</option><option value="Stray Dogs">Stray Dogs</option></optgroup></select><button id="proceed-to-details-btn" class="w-full bg-[#55AD9B] text-white py-3 rounded-xl shadow-lg">Proceed</button></div></main>
+        </div>
+
+        <!-- =================================== FILE COMPLAINT PAGE =================================== -->
+        <div id="file-complaint-page" class="hidden flex-col min-h-screen bg-[#F1F8E8]">
+            <header class="bg-[#D8EFD3] shadow-md py-3 flex items-center px-4"><button class="back-btn p-2" data-target="category-page"><svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg></button><h2 class="font-roboto-slab text-2xl text-center text-black flex-grow">File a New Complaint</h2><div class="w-10"></div></header>
+            <main class="flex-grow w-full p-4 overflow-y-auto pb-8 space-y-4 max-w-2xl mx-auto"><div class="bg-white p-4 rounded-xl shadow-md"><h3 class="font-semibold text-gray-800 mb-2">1. Capture Evidence</h3><div id="photo-container" class="border-2 border-dashed rounded-lg p-2 text-center"><video id="camera-stream" class="w-full rounded-lg hidden" autoplay playsinline></video><canvas id="photo-canvas" class="w-full rounded-lg hidden"></canvas><img id="captured-image" src="" class="w-full rounded-lg hidden"><button id="start-camera-btn" class="bg-[#55AD9B] text-white py-2 px-4 rounded-lg">Start Camera</button><button id="capture-btn" class="bg-[#95D2B3] text-white py-2 px-4 rounded-lg hidden">Take Picture</button><div id="image-validation-spinner" class="hidden my-2"><svg class="animate-spin h-5 w-5 text-[#55AD9B] mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg></div></div></div><div class="bg-white p-4 rounded-xl shadow-md space-y-4"><h3 class="font-semibold text-gray-800">2. Provide Details</h3><div><label class="block text-sm font-medium text-gray-700">Live Location</label><div id="location-status" class="mt-1 w-full p-3 bg-gray-100 rounded-lg">Fetching...</div></div><div><label class="block text-sm font-medium text-gray-700">Problem Description</label><textarea id="description" rows="4" class="mt-1 w-full p-3 rounded-lg border-2" placeholder="Describe the issue..."></textarea><div id="similar-complaints-container" class="mt-2"></div></div><div><label class="block text-sm font-medium text-gray-700">Address / Landmark</label><textarea id="address" rows="2" class="mt-1 w-full p-3 rounded-lg border-2" placeholder="e.g., Near Apollo Hospital"></textarea></div></div><button id="submit-complaint-btn" class="w-full bg-[#55AD9B] text-white py-4 rounded-xl shadow-lg disabled:bg-gray-400">Submit Complaint</button></main>
+        </div>
+
+        <!-- =================================== COMPLAINTS PAGE =================================== -->
+        <div id="complaints-page" class="hidden flex-col h-screen">
+            <header class="bg-[#D8EFD3] shadow-md py-3 sticky top-0 z-10 flex items-center justify-between px-4"><button class="back-btn p-2" data-target="home-page"><svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg></button><div class="flex-grow flex justify-center"><div class="flex items-center bg-white/50 rounded-full p-1 shadow-inner"><button id="active-toggle" class="w-1/2 py-2 px-4 rounded-full font-semibold">Active</button><button id="resolved-toggle" class="w-1/2 py-2 px-4 rounded-full font-semibold">Resolved</button></div></div><div class="w-10"></div></header>
+            <main class="flex-grow w-full p-4 overflow-y-auto pb-8"><div id="active-complaints-view" class="space-y-4 max-w-2xl mx-auto"></div><div id="resolved-complaints-view" class="space-y-4 max-w-2xl mx-auto hidden"></div></main>
+        </div>
+        
+        <!-- =================================== MODALS & TOAST =================================== -->
+        <div id="similar-complaint-modal" class="hidden fixed inset-0 modal-bg z-50 flex items-center justify-center p-4"><div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm text-center animate-fade-in"><h3 class="text-lg font-bold">Similar Complaint Found!</h3><p class="mt-2 text-sm text-gray-600">A similar issue has already been reported in your area. Would you like to upvote it instead of creating a new one?</p><div class="mt-4 space-y-2"><button id="upvote-similar-btn" class="w-full bg-[#95D2B3] text-white py-2 rounded-lg">Upvote Similar Complaint</button><button id="file-new-anyway-btn" class="w-full bg-gray-200 text-gray-800 py-2 rounded-lg">File New Complaint Anyway</button></div></div></div>
+        <div id="feedback-modal" class="hidden fixed inset-0 modal-bg z-50 flex items-center justify-center p-4"><div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm text-center animate-fade-in"><h3 class="text-lg font-bold">Feedback</h3><p class="mt-2 text-sm text-gray-600">Your feedback helps us improve our services.</p><div class="mt-4 space-y-4"><div class="text-left"><p class="font-semibold">Are you satisfied with the work done?</p><div class="flex gap-4 mt-1"><button class="feedback-btn w-full py-2 rounded-lg border" data-field="work" data-value="true">Yes</button><button class="feedback-btn w-full py-2 rounded-lg border" data-field="work" data-value="false">No</button></div></div><div class="text-left"><p class="font-semibold">Are you satisfied with the speed of resolution?</p><div class="flex gap-4 mt-1"><button class="feedback-btn w-full py-2 rounded-lg border" data-field="speed" data-value="true">Yes</button><button class="feedback-btn w-full py-2 rounded-lg border" data-field="speed" data-value="false">No</button></div></div></div><button id="submit-feedback-btn" class="mt-6 w-full bg-[#55AD9B] text-white py-2 rounded-lg" disabled>Submit Feedback</button></div></div>
+        <div id="toast" class="fixed bottom-20 left-1/2 -translate-x-1/2 bg-gray-800 text-white px-6 py-3 rounded-full shadow-xl opacity-0 transition-all duration-300 z-50"></div>
+    </div>
+    
+    <script type="module">
+        // --- CONFIGURATION ---
+        const API_BASE_URL = "https://civictrack-backend-production.up.railway.app"; // Updated for production
+        
+        // --- GLOBAL STATE ---
+        let userLocation = { latitude: null, longitude: null };
+        let complaintInProgress = {};
+        let similarComplaintFound = null;
+        let feedbackData = { complaintId: null, work: null, speed: null };
+        let allComplaintsCache = [];
+
+        // --- DOM ELEMENT REFERENCES ---
+        const pages = { 'home-page': document.getElementById('home-page'), 'auth-page': document.getElementById('auth-page'), 'category-page': document.getElementById('category-page'), 'file-complaint-page': document.getElementById('file-complaint-page'), 'complaints-page': document.getElementById('complaints-page') };
+        const backBtns = document.querySelectorAll('.back-btn');
+        const activeView = document.getElementById('active-complaints-view');
+        const resolvedView = document.getElementById('resolved-complaints-view');
+        const capturedImage = document.getElementById('captured-image');
+        const imageValidationSpinner = document.getElementById('image-validation-spinner');
+        const similarComplaintModal = document.getElementById('similar-complaint-modal');
+        const feedbackModal = document.getElementById('feedback-modal');
+        const toast = document.getElementById('toast');
+        let toastTimeout;
+
+        // --- UTILITY & NAVIGATION ---
+        const showPage = (pageId) => Object.values(pages).forEach(p => p.id === pageId ? p.classList.remove('hidden', 'flex-col') || p.classList.add('flex', 'flex-col') : p.classList.add('hidden'));
+        const showToast = (message, duration = 3000) => {
+            toast.textContent = message; toast.classList.remove('opacity-0');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => toast.classList.add('opacity-0'), duration);
+        };
+        document.getElementById('file-complaint-btn').addEventListener('click', () => showPage('auth-page'));
+        document.getElementById('see-complaints-btn').addEventListener('click', () => { showPage('complaints-page'); fetchAndDisplayComplaints(); });
+        backBtns.forEach(btn => btn.addEventListener('click', () => showPage(btn.dataset.target)));
+        document.querySelectorAll('.footer-link').forEach(link => link.addEventListener('click', e => { e.preventDefault(); showToast(e.target.dataset.message); }));
+
+        // --- AUTHENTICATION ---
+        document.getElementById('verify-demobtn').addEventListener('click', () => {
+            complaintInProgress.userName = document.getElementById('auth-user-name').value;
+            complaintInProgress.userPhone = document.getElementById('auth-user-phone').value;
+            if (!complaintInProgress.userName || !complaintInProgress.userPhone) {
+                showToast("Please enter your name and phone number."); return;
+            }
+            showToast("Verification Successful!");
+            showPage('category-page');
+        });
+
+        // --- GEOLOCATION ---
+        const getUserLocation = () => new Promise((resolve, reject) => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    pos => {
+                        userLocation = { latitude: pos.coords.latitude, longitude: pos.coords.longitude };
+                        resolve(userLocation);
+                    },
+                    err => { showToast("Location access denied. Some features will be limited."); reject(err); }
+                );
+            } else { showToast("Geolocation is not supported by your browser."); reject(new Error("Geolocation not supported.")); }
+        });
+
+        // --- COMPLAINT FILING WORKFLOW ---
+        // 1. Category Selection
+        document.getElementById('proceed-to-details-btn').addEventListener('click', () => {
+            const category = document.getElementById('complaint-category').value;
+            if (!category) { showToast("Please select a category."); return; }
+            complaintInProgress.category = category;
+            complaintInProgress.latitude = userLocation.latitude;
+            complaintInProgress.longitude = userLocation.longitude;
+            showPage('file-complaint-page');
+            document.getElementById('location-status').textContent = `✅ Location captured: ${userLocation.latitude.toFixed(4)}, ${userLocation.longitude.toFixed(4)}`;
+        });
+        
+        // 2. Image Capture & Validation
+        document.getElementById('start-camera-btn').addEventListener('click', async () => {
+            const video = document.getElementById('camera-stream');
+            const startBtn = document.getElementById('start-camera-btn');
+            const captureBtn = document.getElementById('capture-btn');
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+                video.classList.remove('hidden');
+                captureBtn.classList.remove('hidden');
+                startBtn.classList.add('hidden');
+            } catch (err) {
+                showToast("Camera access denied or not available.");
+                console.error("Camera error:", err);
+            }
+        });
+
+        document.getElementById('capture-btn').addEventListener('click', () => {
+            const video = document.getElementById('camera-stream');
+            const canvas = document.getElementById('photo-canvas');
+            const capturedImage = document.getElementById('captured-image');
+
+            const context = canvas.getContext('2d');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Convert canvas to base64 image
+            const imageData = canvas.toDataURL('image/png');
+            capturedImage.src = imageData;
+
+            // Hide video and show captured image
+            capturedImage.classList.remove('hidden');
+            canvas.classList.add('hidden');
+            video.classList.add('hidden');
+            document.getElementById('capture-btn').classList.add('hidden');
+
+            // Stop the camera stream to free resources
+            const stream = video.srcObject;
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+        });
+
+        // 3. Duplicate Check
+        let debounceTimer;
+        document.getElementById('description').addEventListener('keyup', () => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(checkForSimilarComplaints, 1000);
+        });
+        
+        const checkForSimilarComplaints = async () => {
+            const description = document.getElementById('description').value;
+            if (description.length < 20) return;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/complaints/find-similar`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        description: description,
+                        category: complaintInProgress.category,
+                        latitude: userLocation.latitude,
+                        longitude: userLocation.longitude,
+                    })
+                });
+                const similarComplaints = await response.json();
+                if (similarComplaints.length > 0) {
+                    similarComplaintFound = similarComplaints[0];
+                    similarComplaintModal.classList.remove('hidden');
+                }
+            } catch (err) { console.error("Error finding similar complaints:", err); }
+        };
+
+        document.getElementById('upvote-similar-btn').addEventListener('click', async () => {
+            await upvoteComplaint(similarComplaintFound.id);
+            similarComplaintModal.classList.add('hidden');
+            showPage('complaints-page');
+        });
+        document.getElementById('file-new-anyway-btn').addEventListener('click', () => {
+            similarComplaintFound = null;
+            similarComplaintModal.classList.add('hidden');
+        });
+
+        // 4. Final Submission
+        document.getElementById('submit-complaint-btn').addEventListener('click', async () => {
+            const finalComplaint = {
+                ...complaintInProgress,
+                description: document.getElementById('description').value,
+                address: document.getElementById('address').value,
+                imageUrl: capturedImage.src // Using base64 for simplicity
+            };
+            
+            showToast("Submitting complaint...");
+            try {
+                await fetch(`${API_BASE_URL}/api/complaints`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(finalComplaint)
+                });
+                showToast("Complaint Filed Successfully!");
+                showPage('home-page');
+            } catch (err) {
+                showToast("Submission failed. Please try again.");
+                console.error("Submission error:", err);
+            }
+        });
+        
+        // --- VIEW COMPLAINTS & INTERACTION ---
+        const fetchAndDisplayComplaints = async () => {
+            activeView.innerHTML = `<p>Loading complaints...</p>`;
+            resolvedView.innerHTML = ``;
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/complaints?lat=${userLocation.latitude}&lon=${userLocation.longitude}`);
+                if (!response.ok) throw new Error("Network response was not ok");
+                allComplaintsCache = await response.json();
+                renderComplaints();
+            } catch (err) {
+                console.error("Failed to load complaints:", err);
+                activeView.innerHTML = `<p class="text-red-500">Failed to load complaints.</p>`;
+            }
+        };
+
+        const renderComplaints = () => {
+            activeView.innerHTML = '';
+            resolvedView.innerHTML = '';
+            allComplaintsCache.forEach(c => {
+                if (c.status !== 'Resolved') {
+                    const card = document.createElement('div');
+                    card.className = 'bg-white rounded-xl shadow-md overflow-hidden animate-fade-in';
+                    card.innerHTML = `<img class="w-full h-56 object-cover" src="${c.imageUrl}" alt="Complaint"><div class="p-4"><p class="mt-2">${c.description}</p><div class="mt-4 flex justify-between items-center"><span class="text-xs text-gray-500">${c.address}</span><button class="upvote-btn bg-gray-200 px-3 py-1 rounded-full text-sm" data-id="${c.id}">▲ Upvote <span class="upvote-count">${c.upvotes}</span></button></div></div>`;
+                    activeView.appendChild(card);
+                } else {
+                    const card = document.createElement('div');
+                    card.className = 'bg-white rounded-xl shadow-md overflow-hidden animate-fade-in';
+                    card.innerHTML = `<div class="flex gap-2 p-2"><div class="w-1/2 text-center"><img class="h-40 w-full object-cover rounded-lg" src="${c.imageUrl}" alt="Before"><p class="text-xs font-semibold mt-1">BEFORE</p></div><div class="w-1/2 text-center"><img class="h-40 w-full object-cover rounded-lg" src="${c.resolvedImageUrl}" alt="After"><p class="text-xs font-semibold mt-1">AFTER</p></div></div><div class="p-4 pt-2"><p class="font-semibold">${c.description}</p>${c.satisfiedWithWork === null ? `<button class="feedback-trigger-btn mt-4 w-full bg-[#95D2B3] py-2 rounded-lg" data-id="${c.id}">Provide Feedback</button>` : '<p class="mt-4 text-center text-sm text-green-600 font-semibold">Thank you for your feedback!</p>'}</div>`;
+                    resolvedView.appendChild(card);
+                }
+            });
+        };
+
+        const upvoteComplaint = async (id, btn) => {
+            if (btn) btn.disabled = true;
+            try {
+                await fetch(`${API_BASE_URL}/api/complaints/${id}/upvote`, { method: 'PATCH' });
+                showToast("Upvoted!", 1500);
+                fetchAndDisplayComplaints(); // Refresh list to re-sort
+            } catch (err) {
+                showToast("Upvote failed.");
+                if (btn) btn.disabled = false;
+            }
+        };
+
+        document.addEventListener('click', e => {
+            if (e.target.closest('.upvote-btn')) upvoteComplaint(e.target.closest('.upvote-btn').dataset.id, e.target.closest('.upvote-btn'));
+            if (e.target.closest('.feedback-trigger-btn')) {
+                feedbackData = { complaintId: e.target.closest('.feedback-trigger-btn').dataset.id, work: null, speed: null };
+                feedbackModal.classList.remove('hidden');
+                document.getElementById('submit-feedback-btn').disabled = true;
+            }
+            if (e.target.classList.contains('feedback-btn')) {
+                const btn = e.target;
+                feedbackData[btn.dataset.field] = btn.dataset.value === 'true';
+                btn.parentElement.querySelectorAll('.feedback-btn').forEach(b => b.classList.remove('bg-green-200'));
+                btn.classList.add('bg-green-200');
+                if (feedbackData.work !== null && feedbackData.speed !== null) document.getElementById('submit-feedback-btn').disabled = false;
+            }
+        });
+
+        document.getElementById('submit-feedback-btn').addEventListener('click', async () => {
+            showToast("Submitting feedback...");
+            try {
+                await fetch(`${API_BASE_URL}/api/complaints/${feedbackData.complaintId}/feedback`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ satisfiedWithWork: feedbackData.work, satisfiedWithSpeed: feedbackData.speed })
+                });
+                showToast("Thank you for your feedback!");
+                feedbackModal.classList.add('hidden');
+                fetchAndDisplayComplaints(); // Refresh view
+            } catch (err) { showToast("Feedback submission failed."); }
+        });
+        
+        document.getElementById('active-toggle').addEventListener('click', () => { activeView.classList.remove('hidden'); resolvedView.classList.add('hidden'); });
+        document.getElementById('resolved-toggle').addEventListener('click', () => { resolvedView.classList.remove('hidden'); activeView.classList.add('hidden'); });
+
+        // --- INITIAL LOAD ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            showPage('home-page');
+            try {
+                await getUserLocation();
+            } catch {
+                showToast("Could not get location. App functionality may be limited.");
+            }
+        });
+    </script>
+</body>
+</html>
