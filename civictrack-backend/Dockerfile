@@ -5,7 +5,7 @@ WORKDIR /app
 
 # Copy all project files
 COPY pom.xml .
-COPY src src
+COPY ./src ./src
 
 # Download dependencies and build the application
 RUN mvn clean package -DskipTests
