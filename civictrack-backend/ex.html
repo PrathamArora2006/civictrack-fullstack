@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CivicTrack - Fullstack Application</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo-icon {
+            margin-right: 10px;
+            font-size: 32px;
+        }
+        
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background: #ecf0f1;
+            border-bottom: 1px solid #ddd;
+            flex-wrap: wrap;
+        }
+        
+        .status {
+            display: flex;
+            align-items: center;
+            margin: 5px 10px;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .status-online {
+            background: #2ecc71;
+        }
+        
+        .status-offline {
+            background: #e74c3c;
+        }
+        
+        .main-content {
+            display: flex;
+            min-height: 500px;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: #34495e;
+            color: white;
+            padding: 20px;
+        }
+        
+        .sidebar h3 {
+            margin: 20px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .nav-item {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background: #3498db;
+        }
+        
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+        
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .card h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .command-box {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+            overflow-x: auto;
+        }
+        
+        .btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+            margin: 5px;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+        }
+        
+        .btn-danger {
+            background: #e74c3c;
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        
+        .btn-success {
+            background: #2ecc71;
+        }
+        
+        .btn-success:hover {
+            background: #27ae60;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .db-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .console {
+            background: #2c3e50;
+            color: #2ecc71;
+            padding: 15px;
+            border-radius: 5px;
+            height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            margin-top: 20px;
+        }
+        
+        .console-command {
+            color: #3498db;
+        }
+        
+        .console-output {
+            color: #f1c40f;
+        }
+        
+        .console-success {
+            color: #2ecc71;
+        }
+        
+        .file-structure {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            font-family: monospace;
+            margin: 10px 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .file-item {
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .folder {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .file {
+            color: #3498db;
+            margin-left: 20px;
+        }
+        
+        .complaint-list {
+            margin-top: 20px;
+        }
+        
+        .complaint-item {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .complaint-title {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .complaint-meta {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin: 5px 0;
+        }
+        
+        .complaint-status {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+        
+        .status-pending {
+            background: #f39c12;
+            color: white;
+        }
+        
+        .status-in-progress {
+            background: #3498db;
+            color: white;
+        }
+        
+        .status-resolved {
+            background: #2ecc71;
+            color: white;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #2c3e50;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+            
+            .status-bar {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <span class="logo-icon">📊</span>
+                CivicTrack - Fullstack Application
+            </div>
+            <p>Complaint Management System with PostgreSQL Backend</p>
+        </header>
+        
+        <div class="status-bar">
+            <div class="status">
+                <div class="status-indicator status-online"></div>
+                <span>Database: Running (Container ID: 15a8cd74aa41)</span>
+            </div>
+            <div class="status">
+                <div class="status-indicator status-online"></div>
+                <span>Backend: Spring Boot Application Running</span>
+            </div>
+            <div class="status">
+                <div class="status-indicator status-online"></div>
+                <span>Frontend: React Application Ready</span>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="sidebar">
+                <h3>Navigation</h3>
+                <div class="nav-item active" data-target="dashboard">Dashboard</div>
+                <div class="nav-item" data-target="file-structure">File Structure</div>
+                <div class="nav-item" data-target="database">Database Info</div>
+                <div class="nav-item" data-target="frontend">Frontend Integration</div>
+                <div class="nav-item" data-target="complaints">Complaint Management</div>
+                
+                <h3>System Actions</h3>
+                <div class="nav-item" data-target="backend">Backend Controls</div>
+                <div class="nav-item" data-target="frontend-controls">Frontend Controls</div>
+                <div class="nav-item" data-target="deployment">Deployment</div>
+            </div>
+            
+            <div class="content">
+                <div id="dashboard" class="section active">
+                    <div class="card">
+                        <h2>Dashboard</h2>
+                        <p>Your CivicTrack fullstack application is set up and ready to use.</p>
+                        
+                        <div class="command-box">
+                            docker run --name local-postgres -e POSTGRES_USER=youruser -e POSTGRES_PASSWORD=yourpassword -e POSTGRES_DB=yourdb -p 5432:5432 -d postgres
+                        </div>
+                        
+                        <p>Container ID: 15a8cd74aa413a2dd06a4a6a32ce161dc96d0e45319db6a7113f615d191406e0</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h2>Application Overview</h2>
+                        <p>CivicTrack is a complaint management system with the following components:</p>
+                        
+                        <div class="db-actions">
+                            <div class="btn">PostgreSQL Database</div>
+                            <div class="btn">Spring Boot Backend</div>
+                            <div class="btn">React Frontend</div>
+                            <div class="btn">Firebase Integration</div>
+                        </div>
+                        
+                        <h3 style="margin-top: 20px;">How It Works:</h3>
+                        <ol>
+                            <li>Frontend (React) sends HTTP requests to Backend (Spring Boot)</li>
+                            <li>Backend processes requests and interacts with PostgreSQL database</li>
+                            <li>Data is persisted in the Docker container running PostgreSQL</li>
+                            <li>Results are returned to the Frontend for display</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div id="file-structure" class="section">
+                    <div class="card">
+                        <h2>Project File Structure</h2>
+                        <p>Your project has the following structure with both backend and frontend components:</p>
+                        
+                        <div class="file-structure">
+                            <div class="file-item"><span class="folder">civictrack-backend/</span></div>
+                            <div class="file-item"><span class="folder">src/</span></div>
+                            <div class="file-item"><span class="folder">main/</span></div>
+                            <div class="file-item"><span class="folder">java/</span></div>
+                            <div class="file-item"><span class="folder">com/</span></div>
+                            <div class="file-item"><span class="folder">civictrack/</span></div>
+                            <div class="file-item"><span class="file">CivictrackApplication.java</span></div>
+                            <div class="file-item"><span class="folder">config/</span></div>
+                            <div class="file-item"><span class="file">WebConfig.java</span></div>
+                            <div class="file-item"><span class="folder">controller/</span></div>
+                            <div class="file-item"><span class="file">ComplaintController.java</span></div>
+                            <div class="file-item"><span class="folder">model/</span></div>
+                            <div class="file-item"><span class="file">Complaint.java</span></div>
+                            <div class="file-item"><span class="folder">dto/</span></div>
+                            <div class="file-item"><span class="file">ComplaintDTO.java</span></div>
+                            <div class="file-item"><span class="file">EmployeeDTO.java</span></div>
+                            <div class="file-item"><span class="file">FeedbackDTO.java</span></div>
+                            <div class="file-item"><span class="file">ResolvedDTO.java</span></div>
+                            <div class="file-item"><span class="folder">repository/</span></div>
+                            <div class="file-item"><span class="file">ComplaintRepository.java</span></div>
+                            <div class="file-item"><span class="folder">service/</span></div>
+                            <div class="file-item"><span class="file">ComplaintService.java</span></div>
+                            <div class="file-item"><span class="folder">resources/</span></div>
+                            <div class="file-item"><span class="file">application.properties</span></div>
+                            <div class="file-item"><span class="folder">target/</span></div>
+                            <div class="file-item"><span class="folder">classes/</span></div>
+                            <div class="file-item"><span class="file">Dockerfile</span></div>
+                            <div class="file-item"><span class="file">pom.xml</span></div>
+                            <br>
+                            <div class="file-item"><span class="folder">civictrack-frontend/</span></div>
+                            <div class="file-item"><span class="folder">public/</span></div>
+                            <div class="file-item"><span class="file">index.html</span></div>
+                            <div class="file-item"><span class="folder">src/</span></div>
+                            <div class="file-item"><span class="file">App.js</span></div>
+                            <div class="file-item"><span class="file">package.json</span></div>
+                            <div class="file-item"><span class="file">firebase.json</span></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="complaints" class="section">
+                    <div class="card">
+                        <h2>Complaint Management</h2>
+                        <p>This is the main functionality of your application. You can manage complaints through the interface.</p>
+                        
+                        <div class="form-group">
+                            <label for="complaintTitle">Complaint Title</label>
+                            <input type="text" id="complaintTitle" placeholder="Enter complaint title">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="complaintDescription">Description</label>
+                            <textarea id="complaintDescription" rows="3" placeholder="Enter detailed description"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="complaintCategory">Category</label>
+                            <select id="complaintCategory">
+                                <option value="infrastructure">Infrastructure</option>
+                                <option value="sanitation">Sanitation</option>
+                                <option value="safety">Public Safety</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <button class="btn btn-success">Submit Complaint</button>
+                    </div>
+                    
+                    <div class="card">
+                        <h2>Recent Complaints</h2>
+                        <div class="complaint-list">
+                            <div class="complaint-item">
+                                <div class="complaint-title">Pothole on Main Street</div>
+                                <div class="complaint-meta">Category: Infrastructure | Submitted: 2023-10-15</div>
+                                <div class="complaint-status status-in-progress">In Progress</div>
+                            </div>
+                            
+                            <div class="complaint-item">
+                                <div class="complaint-title">Garbage Not Collected</div>
+                                <div class="complaint-meta">Category: Sanitation | Submitted: 2023-10-14</div>
+                                <div class="complaint-status status-pending">Pending</div>
+                            </div>
+                            
+                            <div class="complaint-item">
+                                <div class="complaint-title">Broken Street Light</div>
+                                <div class="complaint-meta">Category: Public Safety | Submitted: 2023-10-12</div>
+                                <div class="complaint-status status-resolved">Resolved</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="database" class="section">
+                    <div class="card">
+                        <h2>Database Information</h2>
+                        <p>Your PostgreSQL database is running in a Docker container with the following configuration:</p>
+                        
+                        <div class="command-box">
+                            POSTGRES_USER=youruser<br>
+                            POSTGRES_PASSWORD=yourpassword<br>
+                            POSTGRES_DB=yourdb<br>
+                            Port: 5432 (mapped to localhost:5432)
+                        </div>
+                        
+                        <p>The Spring Boot application connects to this database using the configuration in <code>application.properties</code>:</p>
+                        
+                        <div class="command-box">
+                            spring.datasource.url=jdbc:postgresql://localhost:5432/yourdb<br>
+                            spring.datasource.username=youruser<br>
+                            spring.datasource.password=yourpassword<br>
+                            spring.jpa.hibernate.ddl-auto=update
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h2>Database Actions</h2>
+                        <p>Manage your PostgreSQL database container:</p>
+                        
+                        <div class="db-actions">
+                            <button class="btn">View Database Logs</button>
+                            <button class="btn">Create Backup</button>
+                            <button class="btn btn-danger">Stop Container</button>
+                            <button class="btn btn-success">Start Container</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="frontend" class="section">
+                    <div class="card">
+                        <h2>Frontend Integration</h2>
+                        <p>Your React frontend connects to the Spring Boot backend using API calls.</p>
+                        
+                        <p>Example API call from React to fetch complaints:</p>
+                        <div class="command-box">
+                            fetch('http://localhost:8080/api/complaints')<br>
+                            &nbsp;&nbsp;.then(response => response.json())<br>
+                            &nbsp;&nbsp;.then(data => console.log(data));
+                        </div>
+                        
+                        <p>Example API call to submit a new complaint:</p>
+                        <div class="command-box">
+                            fetch('http://localhost:8080/api/complaints', {<br>
+                            &nbsp;&nbsp;method: 'POST',<br>
+                            &nbsp;&nbsp;headers: { 'Content-Type': 'application/json' },<br>
+                            &nbsp;&nbsp;body: JSON.stringify(complaintData)<br>
+                            })
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h2>Running the Frontend</h2>
+                        <p>To start your React frontend application:</p>
+                        
+                        <div class="command-box">
+                            cd civictrack-frontend<br>
+                            npm install<br>
+                            npm start
+                        </div>
+                        
+                        <p>The application will be available at <code>http://localhost:3000</code></p>
+                    </div>
+                </div>
+                
+                <div id="backend" class="section">
+                    <div class="card">
+                        <h2>Backend Controls</h2>
+                        <p>Your Spring Boot backend is already compiled and ready to run.</p>
+                        
+                        <p>To start the backend application:</p>
+                        <div class="command-box">
+                            cd civictrack-backend<br>
+                            mvn spring-boot:run
+                        </div>
+                        
+                        <p>The backend will be available at <code>http://localhost:8080</code></p>
+                        
+                        <h3 style="margin-top: 20px;">API Endpoints:</h3>
+                        <ul>
+                            <li><code>GET /api/complaints</code> - Fetch all complaints</li>
+                            <li><code>POST /api/complaints</code> - Create a new complaint</li>
+                            <li><code>GET /api/complaints/{id}</code> - Get a specific complaint</li>
+                            <li><code>PUT /api/complaints/{id}</code> - Update a complaint</li>
+                            <li><code>DELETE /api/complaints/{id}</code> - Delete a complaint</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div id="deployment" class="section">
+                    <div class="card">
+                        <h2>Deployment Information</h2>
+                        <p>Your project includes configuration files for deployment:</p>
+                        
+                        <div class="file-structure">
+                            <div class="file-item"><span class="file">Dockerfile</span> - For containerizing the backend</div>
+                            <div class="file-item"><span class="file">Procfile</span> - For Heroku deployment</div>
+                            <div class="file-item"><span class="file">railway.json</span> - For Railway deployment</div>
+                            <div class="file-item"><span class="file">firebase.json</span> - For Firebase hosting</div>
+                        </div>
+                        
+                        <h3 style="margin-top: 20px;">Deployment Options:</h3>
+                        <div class="db-actions">
+                            <button class="btn">Deploy to Heroku</button>
+                            <button class="btn">Deploy to Railway</button>
+                            <button class="btn">Deploy to Firebase</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>CivicTrack - Complaint Management System | Fullstack Application with PostgreSQL, Spring Boot, and React</p>
+        </footer>
+    </div>
+
+    <script>
+        // Navigation functionality
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Remove active class from all items
+                document.querySelectorAll('.nav-item').forEach(i => {
+                    i.classList.remove('active');
+                });
+                
+                // Add active class to clicked item
+                this.classList.add('active');
+                
+                // Hide all sections
+                document.querySelectorAll('.section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                // Show the target section
+                const target = this.getAttribute('data-target');
+                document.getElementById(target).classList.add('active');
+            });
+        });
+        
+        // Simulate console output
+        const consoleElement = document.createElement('div');
+        consoleElement.innerHTML = `
+            <div class="console">
+                <div class="console-command">$ docker ps</div>
+                <div class="console-output">CONTAINER ID   IMAGE      COMMAND                  CREATED         STATUS         PORTS                    NAMES</div>
+                <div class="console-output">15a8cd74aa41   postgres   "docker-entrypoint.s…"   5 minutes ago   Up 5 minutes   0.0.0.0:5432->5432/tcp   local-postgres</div>
+                <br>
+                <div class="console-command">$ mvn spring-boot:run</div>
+                <div class="console-output">[INFO] Scanning for projects...</div>
+                <div class="console-output">[INFO] Starting CivictrackApplication...</div>
+                <div class="console-success">[SUCCESS] Started CivictrackApplication in 5.87 seconds</div>
+            </div>
+        `;
+        
+        // Add console to backend section
+        document.getElementById('backend').appendChild(consoleElement);
+    </script>
+</body>
+</html>
