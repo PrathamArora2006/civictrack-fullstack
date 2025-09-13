@@ -5,9 +5,9 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Copy Maven wrapper and pom.xml
-COPY mvnw .
-COPY mvn .mvn
 COPY pom.xml .
+COPY mvnw .
+COPY .mvn .mvn
 
 # Download dependencies
 RUN ./mvnw dependency:go-offline -B
