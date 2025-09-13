@@ -4,7 +4,7 @@ import com.civictrack.model.Complaint;
 import com.civictrack.model.dto.ComplaintDTO;
 import com.civictrack.model.dto.EmployeeDTO;
 import com.civictrack.model.dto.FeedbackDTO;
-import com.civictrack.model.dto.ResolveDTO;
+import com.civictrack.model.dto.ResolvedDTO;
 import com.civictrack.service.ComplaintService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -65,7 +65,7 @@ public class ComplaintController {
 
     // Endpoint for the admin portal to resolve a complaint
     @PatchMapping("/{id}/resolve")
-    public ResponseEntity<Complaint> resolveComplaint(@PathVariable Long id, @RequestBody ResolveDTO resolveDTO) {
+    public ResponseEntity<Complaint> resolveComplaint(@PathVariable Long id, @RequestBody ResolvedDTO resolveDTO) {
         return ResponseEntity.ok(complaintService.resolveComplaint(id, resolveDTO));
     }
 

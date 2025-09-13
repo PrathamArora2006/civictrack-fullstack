@@ -1,24 +1,25 @@
 package com.civictrack.model.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-
-/**
- * Data Transfer Object for collecting user feedback on a resolved complaint.
- */
-@Getter
-@Setter
+// Existing FeedbackDTO code
 public class FeedbackDTO {
-    /**
-     * A boolean indicating if the user was satisfied with the quality of the work.
-     */
-    private Boolean satisfiedWithWork;
+    private boolean satisfiedWithWork;
+    private boolean satisfiedWithSpeed;
 
-    /**
-     * A boolean indicating if the user was satisfied with the speed of the resolution.
-     */
-    private Boolean satisfiedWithSpeed;
+    public boolean isSatisfiedWithWork() {
+        return satisfiedWithWork;
+    }
+
+    public void setSatisfiedWithWork(boolean satisfiedWithWork) {
+        this.satisfiedWithWork = satisfiedWithWork;
+    }
+
+    public boolean isSatisfiedWithSpeed() {
+        return satisfiedWithSpeed;
+    }
+
+    public void setSatisfiedWithSpeed(boolean satisfiedWithSpeed) {
+        this.satisfiedWithSpeed = satisfiedWithSpeed;
+    }
+
+    // other fields and methods
 }
-
-
-

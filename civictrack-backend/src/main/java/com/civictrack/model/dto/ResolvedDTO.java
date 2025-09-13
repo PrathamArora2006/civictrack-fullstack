@@ -9,7 +9,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class ResolveDTO {
+public class ResolvedDTO {
     /**
      * The base64-encoded string or URL of the image showing the completed work.
      */

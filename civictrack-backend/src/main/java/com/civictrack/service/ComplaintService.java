@@ -4,7 +4,7 @@ import com.civictrack.model.Complaint;
 import com.civictrack.model.dto.ComplaintDTO;
 import com.civictrack.model.dto.EmployeeDTO;
 import com.civictrack.model.dto.FeedbackDTO;
-import com.civictrack.model.dto.ResolveDTO;
+import com.civictrack.model.dto.ResolvedDTO;
 import com.civictrack.repository.ComplaintRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.apache.commons.text.similarity.JaroWinklerDistance;
@@ -78,7 +78,7 @@ public class ComplaintService {
         return complaintRepository.save(complaint);
     }
 
-    public Complaint resolveComplaint(Long id, ResolveDTO resolveDTO) {
+    public Complaint resolveComplaint(Long id, ResolvedDTO resolveDTO) {
         Complaint complaint = complaintRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Complaint not found"));
         complaint.setResolvedImageUrl(resolveDTO.getResolvedImageUrl());
         complaint.setStatus("Resolved");
